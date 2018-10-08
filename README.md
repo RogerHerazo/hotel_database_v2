@@ -1,1 +1,1 @@
-This project is a rest API for a Database sing mongodb and nodejs
+This project is a rest API for a Database using mongodb and nodejs
