@@ -1,0 +1,32 @@
+{
+  "name": "hoteldatabasev2",
+  "version": "2.0.0",
+  "description": "Hotel Manager for Reservations",
+  "main": "server.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/RogerHerazo/hotel_database_v2.git"
+  },
+  "keywords": [
+    "Express",
+    "Rest",
+    "API",
+    "MongoDB",
+    "Mongoose",
+    "Hotel"
+  ],
+  "author": "Roger Herazo",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/RogerHerazo/hotel_database_v2/issues"
+  },
+  "homepage": "https://github.com/RogerHerazo/hotel_database_v2#readme",
+  "dependencies": {
+    "body-parser": "^1.18.3",
+    "express": "^4.16.3",
+    "mongoose": "^5.3.2"
+  }
+}
