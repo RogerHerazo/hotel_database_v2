@@ -11,11 +11,14 @@ module.exports = (app) => {
     app.get('/hotelFilter', hotels.findOne);
 
     // Update a Note with noteId
-    app.put('/hotels/:hotelId', hotels.update);
+    app.put('/hotelUpdate', hotels.update);
 
     // Delete a Note with noteId
     app.delete('/hotels/:hotelId', hotels.deleteById);
 
     //Delete all hotels
-    app.delete('/del', hotels.deleteAll);
+    app.delete('/hotelDelete', hotels.deleteAll);
+
+    //Fin latitude and longitude all hotels
+    app.get('/hotelLatLong', hotels.findLatLong);
 }

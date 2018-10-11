@@ -1,4 +1,15 @@
 const Hotel = require('./model.js');
+var NodeGeocoder = require('node-geocoder');
+var options = {
+    provider: 'opencage',
+   
+    // Optional depending on the providers
+    httpAdapter: 'https', // Default
+    apiKey: 'e8fc54482aa349fcb1396279b54e0526', // for Mapquest, OpenCage, Google Premier
+    formatter: null         // 'gpx', 'string', ...
+  };
+
+var geocoder = NodeGeocoder(options);
 
 function isValidHotel(hotel){
     return hotel.name && hotel.name.toString().trim() !== '' &&
@@ -12,6 +23,18 @@ function isValidHotel(hotel){
            hotel.rooms && hotel.rooms.toString().trim() !== '';
 }
 
+function sizeCategory(rooms){
+    if (rooms >= 10 && rooms < 50 ){
+        return "Small"
+    }
+    if (rooms >= 50 && rooms < 100 ){
+        return "Medium"
+    }
+    if (rooms >= 100 ){
+        return "Big"
+    }
+}
+
 // Create and Save a new Hotel
 exports.create = (req, res) => {
     // Validate request
@@ -22,25 +45,38 @@ exports.create = (req, res) => {
     }
 
     // Create a Note
-    const hotel = new Hotel({
-        NAME: req.body.name.toString(),
-        ADDRESS: req.body.address.toString(),
-        STATE: req.body.state.toString(),
-        PHONE: req.body.phone.toString(),
-        FAX: req.body.fax.toString(),
-        EMAIL_ID: req.body.email_id.toString(),
-        WEBSITE: req.body.website.toString(),
-        TYPE: req.body.type.toString(),
-        ROOMS: req.body.rooms.toString()
-    });
+    geocoder.geocode(req.body.address.toString(), function(err, resp) {
+        if(resp[0] !== undefined){
+            var lat = resp[0].latitude;
+            var long = resp[0].longitude;
+        }else{
+            var lat = "0";
+            var long = "0";
+        }
 
-    // Save Hotel in the database
-    hotel.save()
-    .then(data => {
-        res.send(data);
-    }).catch(err => {
-        res.status(500).send({
-            message: err.message || "Some error occurred while creating the Hotel."
+        const hotel = new Hotel({
+            NAME: req.body.name.toString(),
+            ADDRESS: req.body.address.toString(),
+            LATITUDE: lat, 
+            LONGITUDE: long,
+            STATE: req.body.state.toString(),
+            PHONE: req.body.phone.toString(),
+            FAX: req.body.fax.toString(),
+            EMAIL_ID: req.body.email_id.toString(),
+            WEBSITE: req.body.website.toString(),
+            TYPE: req.body.type.toString(),
+            ROOMS: req.body.rooms.toString(),
+            SIZE: sizeCategory(req.body.rooms.toString())
+        });
+    
+        // Save Hotel in the database
+        hotel.save()
+        .then(data => {
+            res.send(data);
+        }).catch(err => {
+            res.status(500).send({
+                message: err.message || "Some error occurred while creating the Hotel."
+            });
         });
     });
 };
@@ -116,5 +152,13 @@ exports.deleteAll = (req, res) => {
     });
     res.json({
         message: 'Deleted'
+    });
+};
+
+exports.findLatLong = (req, res) => {
+    geocoder.geocode(req.query.address, function(err, resp) {
+        res.json({
+            message: resp
+        });
     });
 };
