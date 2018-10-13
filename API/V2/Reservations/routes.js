@@ -14,7 +14,7 @@ module.exports = (app) => {
     app.put('/reservationUpdate', reservations.update);
 
     // Delete a Note with noteId
-    app.delete('/reservations/:hotelId', reservations.deleteById);
+    app.delete('/reservations/:reservationId', reservations.deleteById);
 
     //Delete all hotels
     app.delete('/reservationDelete', reservations.deleteAll);

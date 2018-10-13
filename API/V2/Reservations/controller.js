@@ -141,7 +141,7 @@ exports.update = (req, res) => {
 
 // Delete a note with the specified noteId in the request
 exports.deleteById = (req, res) => {
-    Reservation.findByIdAndRemove(req.params.noteId)
+    Reservation.findByIdAndRemove(req.params.reservationId)
     .then(reservation => {
         if(!reservation) {
             return res.status(404).send({
