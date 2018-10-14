@@ -35,6 +35,10 @@ function sizeCategory(rooms){
     }
 }
 
+exports.getDB = () =>{
+    return Hotel;
+}
+
 // Create and Save a new Hotel
 exports.create = (req, res) => {
     // Validate request
@@ -104,6 +108,7 @@ exports.findOne = (req, res) => {
         }
         res.send(hotel);
     }).catch(err => {
+        console.log(err.kind);
         if(err.kind === 'ObjectId') {
             return res.status(404).send({
                 message: "Hotel not found with id " + req.query.hotelId
@@ -113,6 +118,7 @@ exports.findOne = (req, res) => {
             message: "Error retrieving Hotel with id " + req.query.hotelId
         });
     });
+    
 };
 
 // Update a note identified by the noteId in the request

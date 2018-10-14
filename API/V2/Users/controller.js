@@ -18,6 +18,9 @@ function isValidUpdateUser(user) {
         user.newlastname && user.newlastname.toString().trim() !== '' &&
         user.newaddress && user.newaddress.toString().trim() !== '';
 }
+exports.getDB = () =>{
+    return User;
+}
 
 // Create and Save a new User
 exports.create = (req, res) => {
