@@ -34,6 +34,7 @@ app.get('/', (req, res) => {
 // Require Hotels routes
 require('./API/V2/Hotels/routes.js')(app);
 require('./API/V2/Reservations/routes.js')(app);
+require('./API/V2/Users/routes.js')(app);
 
 // listen for requests
 app.listen(4000, () => {

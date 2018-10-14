@@ -4,8 +4,12 @@ function isValidUser(user) {
     return user.name && user.name.toString().trim() !== '' &&
         user.lastname && user.lastname.toString().trim() !== '' &&
         user.email && user.email.toString().trim() !== '' &&
-        hotel.password && user.password.toString().trim() !== '' &&
-        hotel.address && user.address.toString().trim() !== '';
+        user.password && user.password.toString().trim() !== '' &&
+        user.address && user.address.toString().trim() !== '';
+}
+
+exports.getDB = () =>{
+    return User;
 }
 
 // Create and Save a new User
