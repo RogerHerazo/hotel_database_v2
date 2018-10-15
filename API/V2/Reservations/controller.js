@@ -1,87 +1,9 @@
 const Reservation = require('./model.js');
 const Hotel = require('../Hotels/controller.js');
 const User = require('../Users/controller.js');
-function isValidUser(user_id){
-    //Change
-    console.log("Verify user_id...")
-    return true;
-}
 
-function isValidHotel(hotel_id){
-    console.log("Verify hotel_id...")
-}
-
-function isValidDates(start, end){
-    console.log("Verify dates...")
-    return true;
-}
-
-function isAvailable(start, end, rooms){
-    console.log("Verify availability...")
-    return true;
-}
-
-function isValidReservation(reservation){
-    if(reservation.hotel_id && reservation.hotel_id.toString().trim() !== '' &&
-       reservation.user_id && reservation.user_id.toString().trim() !== '' &&
-       reservation.start && reservation.start.toString().trim() !== '' &&
-       reservation.end && reservation.end.toString().trim() !== '' &&
-       reservation.rooms && reservation.rooms.toString().trim() !== ''){
-            //Verifico si el hotel es Valido
-            /*
-            ht.findById(hotel_id, function (err, res){
-                if(res != null){
-                    console.log("Hotel_id is valid");
-                }else{
-                    console.log("Hotel_id isn't valid");
-                }
-            });
-            */
-    }else{
-        //Hay CamposVacios
-        return respond = {
-            status: '405',
-            message: 'You missed fields'
-        }
-    }
-
-    /*
-            if(isValidUser(reservation.user_id.toString())){
-                if(isValidHotel(reservation.hotel_id.toString())){
-                    if(isValidDates(reservation.start.toString(), reservation.end.toString())){
-                        if(isAvailable(reservation.start.toString(), reservation.end.toString(), reservation.rooms.toString())){
-                            return respond = {
-                                status: '400',
-                                message: 'All Good'
-                            }
-                        }else{
-                            //No available rooms
-                            return respond = {
-                                status: '401',
-                                message: 'No Available Rooms'
-                            }
-                        }
-                    }else{
-                        return respond = {
-                            status: '402',
-                            message: 'Not Valid Start or End Date'
-                        }
-                    }
-                }else{
-                    //no es un hotel valido
-                    return respond = {
-                        status: '403',
-                        message: 'Not valid HotelID'
-                    }
-                }
-            }else{
-                //No es un usuario valido
-                return respond = {
-                    status: '404',
-                    message: 'Not valid UserID'
-                }
-            }
-    */
+exports.getDB = () =>{
+    return Reservation;
 }
 
 // Create and Save a new Reservation
@@ -137,16 +59,41 @@ exports.create = (req, res) => {
                                                 console.log("136 - "+"Esta Reservacion NO interfiere con la actual");
                                         }else{
                                             console.log("138 - "+"Esta reservacion interfiere con la actual");
-                                            totalocupied = totalocupied + parseInt(req.body.rooms);
+                                            totalocupied = totalocupied + parseInt(reservation.ROOMS);
                                             console.log(totalocupied);
                                         }
                                     }
                                 }
 
-                                res.status(300);
-                                res.json("OK");
+                                if (hotel.ROOMS - totalocupied < req.body.rooms){
+                                    res.status(400);
+                                    res.json("No Availalble Rooms");
+                                }else{
+                                    // Create a Reservation
+                                    console.log("Create Reservation");
+                                    const reservation = new Reservation({
+                                        HOTEL_ID: req.body.hotel_id.toString(),
+                                        USER_ID: req.body.user_id.toString(),
+                                        START: req.body.start.toString(),
+                                        END: req.body.end.toString(),
+                                        ROOMS: req.body.rooms.toString()
+                                    });
+                                
+                                    // Save Reservation in the database
+                                    reservation.save()
+                                    .then(data => {
+                                        res.send(data);
+                                    }).catch(err => {
+                                        res.status(500).send({
+                                            message: err.message || "Some error occurred while creating the Reservation."
+                                        });
+                                    });
+                                }
+
                             }).catch(err => {
-                                console.log(err) ;
+                                res.status(500).send({
+                                    message: err.message || "Some error occurred while looking for the hotel."
+                                });
                             });
 
 
@@ -166,28 +113,9 @@ exports.create = (req, res) => {
                 if(err.kind === 'ObjectId') {
                     console.log("Hotel not found");                
                 }
-                console.log("Hotel not found");
+                res.status(403);
+                res.json("Hotel not found");
             });
-        /*
-        // Create a Reservation
-        const reservation = new Reservation({
-            HOTEL_ID: req.body.hotel_id.toString(),
-            USER_ID: req.body.user_id.toString(),
-            START: req.body.start.toString(),
-            END: req.body.end.toString(),
-            ROOMS: req.body.rooms.toString()
-        });
-    
-        // Save Reservation in the database
-        reservation.save()
-        .then(data => {
-            res.send(data);
-        }).catch(err => {
-            res.status(500).send({
-                message: err.message || "Some error occurred while creating the Reservation."
-            });
-        });
-        */
     }else{
         res.status(405);
         res.json("You missed Fields");

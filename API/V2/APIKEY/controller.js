@@ -2,8 +2,12 @@ const Key = require('./model.js');
 
 function isValidKey(user) {
     return user.name && user.name.toString().trim() !== '' &&
-        user.company && user.lastname.toString().trim() !== '' &&
+        user.company && user.company.toString().trim() !== '' &&
         user.email && user.email.toString().trim() !== '';
+}
+
+exports.getDB = () =>{
+    return Key;
 }
 
 // Create and Save a new Key
@@ -19,7 +23,7 @@ exports.create = (req, res) => {
 
     const key = new Key({
         NAME: req.body.name.toString(),
-        COMPANY: req.body.lastname.toString(),
+        COMPANY: req.body.company.toString(),
         EMAIL: req.body.email.toString()
     });
 
@@ -46,49 +50,7 @@ exports.findAll = (req, res) => {
         });
 };
 
-// Find a single note with a noteId
-exports.findOne = (req, res) => {
-    Key.find(req.query)
-        .then(key => {
-            if (!key) {
-                return res.status(404).send({
-                    message: "User not found with id " + req.query.userId
-                });
-            }
-            res.send(key);
-        }).catch(err => {
-            if (err.kind === 'ObjectId') {
-                return res.status(404).send({
-                    message: "User not found with id " + req.query.userId
-                });
-            }
-            return res.status(500).send({
-                message: "Error retrieving User with id " + req.query.userId
-            });
-        });
-};
-
-exports.deleteById = (req, res) => {
-    Key.findByIdAndRemove(req.params.noteId)
-        .then(key => {
-            if (!key) {
-                return res.status(404).send({
-                    message: "User not found with id " + req.params.userId
-                });
-            }
-            res.send({ message: "User deleted successfully!" });
-        }).catch(err => {
-            if (err.kind === 'ObjectId' || err.name === 'NotFound') {
-                return res.status(404).send({
-                    message: "User not found with id " + req.params.userId
-                });
-            }
-            return res.status(500).send({
-                message: "Could not delete user with id " + req.params.userId
-            });
-        });
-};
-
+// Find a single note with a noteID
 exports.deleteAll = (req, res) => {
     Key.remove({})
         .catch(err => {
