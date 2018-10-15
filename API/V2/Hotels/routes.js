@@ -14,11 +14,14 @@ module.exports = (app) => {
     app.put('/hotelUpdate', hotels.update);
 
     // Delete a Note with noteId
-    app.delete('/hotels/:hotelId', hotels.deleteById);
+    app.delete('/hotels', hotels.deleteById);
 
     //Delete all hotels
     app.delete('/hotelDelete', hotels.deleteAll);
 
-    //Fin latitude and longitude all hotels
+    //Find latitude and longitude all hotels
     app.get('/hotelLatLong', hotels.findLatLong);
+
+    //Find latitude and longitude all hotels
+    app.get('/hotelAvailable', hotels.findAvailability);
 }

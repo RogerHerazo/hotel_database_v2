@@ -28,10 +28,11 @@ for i in data:
             'email_id': hotel[5],
             'website': hotel[6],
             'type': hotel[7],
-            'rooms': hotel[8]}
+            'rooms': hotel[8],
+            'apikey': "5bc3bdeefdd0813c0c68c6fe"}
 
     response = requests.post(url, json = info)  
 
     print(response, "Hotel n°: ", cont, info.get("name",None))
-    '''time.sleep(0.1)'''
+    time.sleep(0.1)
 print('Ended')
